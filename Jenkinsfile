@@ -40,18 +40,17 @@ pipeline {
                 }
             }
         }
+    }
 
-        stage('Post-build') {
-            post {
-                always {
-                    script {
-                        // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
-                        docker.image(DOCKER_IMAGE).inside {
-                            sh 'sudo chown -R node:node /home/node/.npm-global'
-                        }
-                    }
+    post {
+        always {
+            script {
+                // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
+                docker.image(DOCKER_IMAGE).inside {
+                    sh 'sudo chown -R node:node /home/node/.npm-global'
                 }
             }
         }
     }
 }
+
