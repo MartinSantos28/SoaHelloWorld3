@@ -1,12 +1,17 @@
 pipeline {
     agent any
-
+    
     environment {
         DOCKER_IMAGE = 'node-hello-world'
-        NODE_ENV = 'development'
     }
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
@@ -14,18 +19,20 @@ pipeline {
                 }
             }
         }
+
         stage('Test') {
             steps {
                 script {
                     docker.image(DOCKER_IMAGE).inside {
-                        
                         sh 'npm install'
-                        sh 'npm test'
-                        sh 'npm install supertest --save-dev'
+                        // También puedes instalar supertest aquí si es necesario
+                         sh 'npm install supertest --save-dev'
+                         sh 'npm test'
                     }
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 script {
