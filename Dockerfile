@@ -1,5 +1,7 @@
 FROM node:14
 
+RUN mkdir -p /home/node/.npm && chown -R node:node /home/node/.npm
+
 WORKDIR /app
 
 COPY package*.json ./
