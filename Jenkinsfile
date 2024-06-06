@@ -21,30 +21,33 @@ pipeline {
         }
 
         stage('Test') {
-        steps {
-            script {
-                docker.image(DOCKER_IMAGE).inside('-u root') {
-                    sh 'chown -R node:node /home/node/.npm-global'
+            steps {
+                script {
+                    docker.image(DOCKER_IMAGE).inside {
+                        sh 'npm install'
+                        // También puedes instalar supertest aquí si es necesario
+                        // sh 'npm install supertest --save-dev'
+                        // sh 'npm test'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.image(DOCKER_IMAGE).run('-d -p 3000:3000')
                 }
             }
         }
     }
 
-stage('Deploy') {
-    steps {
-        script {
-            docker.image(DOCKER_IMAGE).inside('-u root') {
-                sh 'chown -R node:node /home/node/.npm-global'
-            }
-        }
-    }
-    }
-
     post {
         always {
             script {
-                docker.image(DOCKER_IMAGE).inside('-u root') {
-                    sh 'chown -R node:node /home/node/.npm-global'
+                // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
+                docker.image(DOCKER_IMAGE).inside {
+                    sh 'sudo chown -R node:node /home/node/.npm-global'
                 }
             }
         }
