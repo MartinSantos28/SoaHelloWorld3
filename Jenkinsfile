@@ -1,54 +1,46 @@
 pipeline {
     agent any
     
-    environment {
-        DOCKER_IMAGE = 'node-hello-world'
-    }
-
     stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
+                // Pasos para construir tu proyecto
                 script {
-                    docker.build(DOCKER_IMAGE)
+                    sh 'npm install'
+                    sh 'npm run build'
                 }
             }
         }
-
-       stage('Test') {
-    steps {
-        script {
-            docker.image(DOCKER_IMAGE).inside('-u root') {
-                sh 'chown -R node:node /home/node/.npm-global'
+        stage('Test') {
+            steps {
+                // Pasos para ejecutar pruebas
+                script {
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Pasos para implementar/deploy tu aplicación
+                script {
+                    sh 'npm run deploy'
+                }
             }
         }
     }
-}
-
-stage('Deploy') {
-    steps {
-        script {
-            docker.image(DOCKER_IMAGE).inside('-u root') {
-                sh 'chown -R node:node /home/node/.npm-global'
-            }
-        }
-    }
-}
-
+    
     post {
         always {
-            script {
-                // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
-                docker.image(DOCKER_IMAGE).inside {
-                    sh 'sudo chown -R node:node /home/node/.npm-global'
-                }
-            }
+            // Pasos que se ejecutan siempre, independientemente del resultado de las etapas anteriores
+            echo 'Pipeline finalizado'
+        }
+        success {
+            // Pasos que se ejecutan solo si todas las etapas anteriores son exitosas
+            echo 'Pipeline exitoso'
+        }
+        failure {
+            // Pasos que se ejecutan solo si alguna de las etapas anteriores falla
+            echo 'Pipeline fallido'
         }
     }
-}
 }
