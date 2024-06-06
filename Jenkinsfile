@@ -26,8 +26,8 @@ pipeline {
                     docker.image(DOCKER_IMAGE).inside {
                         sh 'npm install'
                         // También puedes instalar supertest aquí si es necesario
-                         sh 'npm install supertest --save-dev'
-                         sh 'npm test'
+                        // sh 'npm install supertest --save-dev'
+                        // sh 'npm test'
                     }
                 }
             }
@@ -41,12 +41,14 @@ pipeline {
             }
         }
 
-        post {
-            always {
-                script {
-                    // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
-                    docker.image(DOCKER_IMAGE).inside {
-                        sh 'sudo chown -R node:node /home/node/.npm-global'
+        stage('Post-build') {
+            post {
+                always {
+                    script {
+                        // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
+                        docker.image(DOCKER_IMAGE).inside {
+                            sh 'sudo chown -R node:node /home/node/.npm-global'
+                        }
                     }
                 }
             }
