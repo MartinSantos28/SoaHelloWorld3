@@ -1,15 +1,21 @@
-FROM node:14
+FROM ubuntu:20.04
 
-# Cambiar permisos en la carpeta .npm
-RUN sudo chown -R 995:991 "/.npm"
+# Instalar Node.js
+RUN apt-get update && apt-get install -y nodejs npm
+RUN npm install -g n
+RUN n stable
 
+# Instalar sudo
+RUN apt-get update && apt-get install -y sudo
+
+# Crear un usuario no privilegiado y asignar permisos
 RUN groupadd -r appgroup && useradd -r -g appgroup appuser
-WORKDIR /app
+RUN chown -R appuser:appgroup /.npm
 
-COPY package*.json ./
-RUN npm install --unsafe-perm=true --allow-root
-
-COPY . .
-
+# Cambiar al usuario no privilegiado
 USER appuser
+
+# Copiar y ejecutar tu aplicación
+WORKDIR /app
+COPY . .
 CMD ["node", "index.js"]
