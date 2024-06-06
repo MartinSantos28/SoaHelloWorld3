@@ -6,11 +6,12 @@ COPY package*.json ./
 
 RUN npm install
 
-# Fix the ownership of the .npm directory
-RUN chown -R 995:991 "/.npm"
+# Create the .npm directory and fix the ownership
+RUN mkdir -p /.npm && chown -R 995:991 "/.npm"
 
 COPY . .
 
 EXPOSE 3000
 
 CMD ["node", "index.js"]
+
