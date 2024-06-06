@@ -3,7 +3,7 @@ FROM node:14
 WORKDIR /app
 
 COPY package*.json ./
-
+RUN chown -R 995:991 "/.npm"
 RUN npm install
 
 COPY . .
