@@ -1,6 +1,7 @@
 FROM node:14
 
 WORKDIR /app
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
 # Copiar el package.json primero para aprovechar el caché de las capas de Docker
 COPY package*.json ./
