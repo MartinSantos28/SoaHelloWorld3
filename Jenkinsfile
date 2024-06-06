@@ -21,14 +21,14 @@ pipeline {
         }
 
         stage('Test') {
-    steps {
-        script {
-            docker.image(DOCKER_IMAGE).inside('-u root') {
-                sh 'chown -R node:node /home/node/.npm-global'
+        steps {
+            script {
+                docker.image(DOCKER_IMAGE).inside('-u root') {
+                    sh 'chown -R node:node /home/node/.npm-global'
+                }
             }
         }
     }
-}
 
 stage('Deploy') {
     steps {
@@ -51,4 +51,3 @@ stage('Deploy') {
     }
 }
 
-}
