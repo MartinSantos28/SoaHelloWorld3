@@ -15,8 +15,8 @@ USER appuser
 COPY package*.json ./
 COPY . .
 
-# Instala las dependencias de la aplicación
-RUN npm install
+# Instala las dependencias de la aplicación en el directorio de usuario
+RUN npm install --unsafe-perm=true --allow-root
 
 # Expone el puerto en el que se ejecuta la aplicación
 EXPOSE 3000
