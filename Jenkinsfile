@@ -18,7 +18,7 @@ pipeline {
           script {
             docker.image(DOCKER_IMAGE).inside {
                     // Fix npm cache permissions
-                    sh 'sudo chown -R 995:991 "/.npm"'
+                    sh 'chown -R 995:991 "/.npm"'
                     
                     // Clean npm cache
                     sh 'npm cache clean --force'
