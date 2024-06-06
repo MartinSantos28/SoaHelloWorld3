@@ -7,6 +7,13 @@ pipeline {
   }
 
   stages {
+    stage('Limpiar Contenedores') {
+            steps {
+                script {
+                    sh 'docker stop $(docker ps -q)'
+                }
+            }
+        }
     stage ('Build') {
       steps {
         script {
@@ -14,6 +21,7 @@ pipeline {
         }
       }
     }
+
     stage ('Test') {
       steps {
         script {
