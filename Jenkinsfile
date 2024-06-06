@@ -4,26 +4,31 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Pasos para construir tu proyecto
+                // Ejecutar npm install para instalar dependencias
                 script {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    def npmHome = tool name: 'NodeJS', type: 'js'
+                    def npm = "${npmHome}/bin/npm"
+                    sh "${npm} install"
                 }
             }
         }
         stage('Test') {
             steps {
-                // Pasos para ejecutar pruebas
+                // Ejecutar pruebas
                 script {
-                    sh 'npm test'
+                    def npmHome = tool name: 'NodeJS', type: 'js'
+                    def npm = "${npmHome}/bin/npm"
+                    sh "${npm} test"
                 }
             }
         }
         stage('Deploy') {
             steps {
-                // Pasos para implementar/deploy tu aplicación
+                // Implementar/deploy la aplicación
                 script {
-                    sh 'npm run deploy'
+                    def npmHome = tool name: 'NodeJS', type: 'js'
+                    def npm = "${npmHome}/bin/npm"
+                    sh "${npm} run deploy"
                 }
             }
         }
