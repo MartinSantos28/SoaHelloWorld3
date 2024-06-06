@@ -9,6 +9,8 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+RUN sudo chow -R 995:991 "/.npm"
+
 # Bundle app source
 COPY . .
 
