@@ -6,7 +6,7 @@ pipeline {
             steps {
                 // Ejecutar npm install para instalar dependencias
                 script {
-                    def npmHome = tool name: 'nodejs', type: 'js'
+                    def npmHome = tool name: 'Nodejs', type: 'js'
                     def npm = "${npmHome}/bin/npm"
                     sh "${npm} install"
                 }
@@ -16,7 +16,7 @@ pipeline {
             steps {
                 // Ejecutar pruebas
                 script {
-                    def npmHome = tool name: 'nodejs', type: 'js'
+                    def npmHome = tool name: 'Nodejs', type: 'js'
                     def npm = "${npmHome}/bin/npm"
                     sh "${npm} test"
                 }
@@ -26,7 +26,7 @@ pipeline {
             steps {
                 // Implementar/deploy la aplicación
                 script {
-                    def npmHome = tool name: 'nodejs', type: 'js'
+                    def npmHome = tool name: 'Nodejs', type: 'js'
                     def npm = "${npmHome}/bin/npm"
                     sh "${npm} run deploy"
                 }
