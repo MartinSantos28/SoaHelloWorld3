@@ -17,9 +17,17 @@ pipeline {
         steps {
           script {
             docker.image(DOCKER_IMAGE).inside {
-              sh 'npm cache clean --force'
-              sh 'npm install'
-              sh 'npm test'
+                    // Fix npm cache permissions
+                    sh 'sudo chown -R 995:991 "/.npm"'
+                    
+                    // Clean npm cache
+                    sh 'npm cache clean --force'
+                    
+                    // Install npm dependencies
+                    sh 'npm install'
+                    
+                    // Run tests
+                    sh 'npm test'
             }
           }
         }
