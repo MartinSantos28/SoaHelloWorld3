@@ -33,10 +33,12 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+         stage('Deploy') {
             steps {
                 script {
-                    docker.image(DOCKER_IMAGE).run('-d -p 3000:3000')
+                    docker.image(DOCKER_IMAGE).inside('-u root') {
+                        sh 'chown -R node:node /home/node/.npm-global'
+                    }
                 }
             }
         }
@@ -45,9 +47,8 @@ pipeline {
     post {
         always {
             script {
-                // Corrige los permisos de la carpeta de caché de npm dentro del contenedor Docker
-                docker.image(DOCKER_IMAGE).inside {
-                    sh 'sudo chown -R node:node /home/node/.npm-global'
+                docker.image(DOCKER_IMAGE).inside('-u root') {
+                    sh 'chown -R node:node /home/node/.npm-global'
                 }
             }
         }
