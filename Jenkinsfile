@@ -1,51 +1,35 @@
 pipeline {
     agent any
-    
-    stages {
-        stage('Build') {
-            steps {
-                // Ejecutar npm install para instalar dependencias
-                script {
-                    def npmHome = tool name: 'Nodejs', type: 'js'
-                    def npm = "${npmHome}/bin/npm"
-                    sh "${npm} install"
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                // Ejecutar pruebas
-                script {
-                    def npmHome = tool name: 'Nodejs', type: 'js'
-                    def npm = "${npmHome}/bin/npm"
-                    sh "${npm} test"
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                // Implementar/deploy la aplicación
-                script {
-                    def npmHome = tool name: 'Nodejs', type: 'js'
-                    def npm = "${npmHome}/bin/npm"
-                    sh "${npm} run deploy"
-                }
-            }
-        }
+
+    environment {
+        DOCKER_IMAGE = 'pipeline'
     }
-    
-    post {
-        always {
-            // Pasos que se ejecutan siempre, independientemente del resultado de las etapas anteriores
-            echo 'Pipeline finalizado'
+
+    stages {
+      stage ('Build') {
+        steps {
+          script {
+            docker.build DOCKER_IMAGE
+          }
         }
-        success {
-            // Pasos que se ejecutan solo si todas las etapas anteriores son exitosas
-            echo 'Pipeline exitoso'
+      }
+      stage ('Test') {
+        steps {
+          script {
+            docker.image(DOCKER_IMAGE).inside {
+              sh 'npm cache clean --force'
+              sh 'npm install'
+              sh 'npm test'
+            }
+          }
         }
-        failure {
-            // Pasos que se ejecutan solo si alguna de las etapas anteriores falla
-            echo 'Pipeline fallido'
+      }
+      stage ('Deploy') {
+        steps {
+          script {
+            docker.image(DOCKER_IMAGE).run '-p 3000:3000 -d'
+          }
         }
+      }
     }
 }
