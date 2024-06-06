@@ -18,6 +18,7 @@ pipeline {
             steps {
                 script {
                     docker.image(DOCKER_IMAGE).inside {
+                        sh 'npm install supertest --save-dev'
                         sh 'npm install'
                         sh 'npm test'
                     }
