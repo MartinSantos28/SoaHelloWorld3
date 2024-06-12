@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Limpiar Contenedores') {
             steps {
-                    sh 'docker stop $(docker ps -q)'
+                    sh    'docker stop $(docker ps -q)'
             }
         }
     stage ('Build') {
